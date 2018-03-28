@@ -5,7 +5,7 @@ require 'pry'
 
 class PatronTest < Minitest::Test
   def test_it_exists
-    patron = Patron.new
+    patron = Patron.new("Bob")
     assert_instance_of Patron, patron
   end
 
@@ -30,3 +30,4 @@ class PatronTest < Minitest::Test
 
     assert_equal ["Hiking"], patron.interests
   end
+end
