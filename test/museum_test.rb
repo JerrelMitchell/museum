@@ -100,7 +100,6 @@ class MuseumTest < Minitest::Test
     dmns.admit(jerrel)
 
     assert_equal ["Bob", "Jerrel"], dmns.patrons_of(exhibit2)
-
     assert_equal [], dmns.patrons_of(exhibit3)
   end
 
