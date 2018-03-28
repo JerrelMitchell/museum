@@ -27,10 +27,14 @@ class MuseumTest < Minitest::Test
   end
 
   def test_when_patron_is_admitted_10_dollars_of_revenue_is_generated
-    dmns = Museum.new("Denver Museum of Nature and Science")
-    bob = Patron.new("Bob")
+    dmns   = Museum.new("Denver Museum of Nature and Science")
+    bob    = Patron.new("Bob")
+    jerrel = Patron.new("Jerrel")
     dmns.admit(bob)
     assert_equal 10, dmns.revenue
+    dmns.admit(jerrel)
+    assert_equal 20, dmns.revenue
+
   end
 
   def test_revenue_is_generated_when_patron_visits_existing_exhibits
@@ -45,13 +49,16 @@ class MuseumTest < Minitest::Test
 
     dmns.admit(bob)
     assert_equal 20, dmns.revenue
+
+    dmns.admit(bob)
+    assert_equal 40, dmns.revenue
   end
 
   def test_multiple_visiting_patrons_generate_revenue
     dmns = Museum.new("Denver Museum of Nature and Science")
     dmns.add_exhibit("Dead Sea Scrolls", 10)
     dmns.add_exhibit("Gems and Minerals", 0)
-    dmns.add_exhibit("Horses In The West", 20)
+    dmns.add_exhibit("Horses In The West", 15)
     dmns.add_exhibit("Painting On Water", 20)
 
     bob = Patron.new("Bob")
@@ -59,14 +66,42 @@ class MuseumTest < Minitest::Test
     bob.add_interest("Dead Sea Scrolls")
     bob.add_interest("Imax")
 
-    jerrel = Patron.new("Jerrel")
-    bob.add_interest("Gems and Minerals")
-    bob.add_interest("Dead Sea Scrolls")
-    bob.add_interest("Painting On Water")
-
     dmns.admit(bob)
+    assert_equal 35, dmns.revenue
+
+    jerrel = Patron.new("Jerrel")
+    jerrel.add_interest("Gems and Minerals")
+    jerrel.add_interest("Dead Sea Scrolls")
+    jerrel.add_interest("Painting On Water")
+
     dmns.admit(jerrel)
-    assert_equal 80, dmns.revenue
+    assert_equal 75, dmns.revenue
+  end
+
+  def test_lists_array_of_patron_names_admitted_to_exhibit
+    dmns = Museum.new("Denver Museum of Nature and Science")
+    dmns.add_exhibit("Dead Sea Scrolls", 10)
+    dmns.add_exhibit("Gems and Minerals", 0)
+    dmns.add_exhibit("Horses In The West", 20)
+
+    exhibit1 = "Horses In The West"
+    exhibit2 = "Dead Sea Scrolls"
+    exhibit3 = "Gems and Minerals"
+
+    bob = Patron.new("Bob")
+    bob.add_interest("Horses In The West")
+    bob.add_interest("Dead Sea Scrolls")
+    dmns.admit(bob)
+
+    assert_equal ["Bob"], dmns.patrons_of(exhibit1)
+
+    jerrel = Patron.new("Jerrel")
+    jerrel.add_interest("Dead Sea Scrolls")
+    dmns.admit(jerrel)
+
+    assert_equal ["Bob", "Jerrel"], dmns.patrons_of(exhibit2)
+
+    assert_equal [], dmns.patrons_of(exhibit3)
   end
 
 end

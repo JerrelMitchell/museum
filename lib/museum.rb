@@ -4,6 +4,7 @@ class Museum
     @name     = name
     @exhibits = {}
     @revenue  = 0
+    @patrons  = []
   end
 
   def add_exhibit(name, price)
@@ -11,9 +12,14 @@ class Museum
   end
 
   def admit(patron)
+    @patrons << patron.name
     @revenue += 10
     patron.interests.map do |interest|
       @revenue += @exhibits[interest] if @exhibits.key?(interest)
     end
+  end
+
+  def patrons_of(exhibit)
+    @patrons
   end
 end
