@@ -30,4 +30,11 @@ class PatronTest < Minitest::Test
 
     assert_equal ["Hiking"], patron.interests
   end
+
+  def test_it_has_multiple_interests
+    patron = Patron.new("Jerrel")
+    patron.add_interests("Hiking")
+    patron.add_interests("Gaming")
+    assert_equal ["Hiking", "Gaming"], patron.interests
+  end
 end
